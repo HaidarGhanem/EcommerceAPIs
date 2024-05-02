@@ -2,7 +2,8 @@ const express = require ('express')
 const router = express.Router()
 const jwt = require ('jsonwebtoken')
 const JWTsecret = process.env.JWTsecret
-const {SignUp , SignIn , EditProfile} = require ('../controllers/Accounts')
+const {SignUp , SignIn , EditProfile} = require ('../controllers/Employees')
+const { Authorized } = require ('../controllers/Authorized')
 
 
 //put SignUp 
@@ -35,7 +36,7 @@ router.get('/signin', async (req,res,next)=>{
 })
 
 //put EditProfile
-router.put('/editprofile', async (req,res,next)=>{
+router.put('/editprofile', Authorized , async (req,res,next)=>{
     try {
         const { username , password , phoneNumber} = req.body
         const result = await EditProfile(username , password , phoneNumber)
