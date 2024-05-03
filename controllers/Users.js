@@ -56,4 +56,13 @@ const EditProfile = async (username , password , phoneNumber)=>{
     }
 }
 
-module.exports = {SignUp , SignIn , EditProfile}
+const DeleteProfile = async (userId) => {
+    const user = await Users.findByIdAndDelete(userId);
+    if (!user) {
+        return { success: false, message: 'User not found' };
+    }
+    return { success: true, message: 'User account deleted successfully' };
+}
+
+
+module.exports = {SignUp , SignIn , EditProfile , DeleteProfile}

@@ -25,7 +25,7 @@ app.use(session({
     })
 }))
 
-app.use('/', require('./routes/Accounts'))
+app.use('/', require('./routes/Users'))
 
 http.createServer(app).listen(PORT,()=>{
     console.log(`server is running on PORT : ${PORT}`)

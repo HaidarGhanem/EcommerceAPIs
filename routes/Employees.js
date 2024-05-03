@@ -2,7 +2,7 @@ const express = require ('express')
 const router = express.Router()
 const jwt = require ('jsonwebtoken')
 const JWTsecret = process.env.JWTsecret
-const {SignUp , SignIn , EditProfile} = require ('../controllers/Employees')
+const {SignUp , SignIn , EditProfile , DeleteProfile} = require ('../controllers/Employees')
 const { Authorized } = require ('../controllers/Authorized')
 
 
@@ -27,6 +27,7 @@ router.get('/signin', async (req,res,next)=>{
         if(result){
             const token = jwt.sign({ userId : result._id }, JWTsecret)
             res.cookie('token' , token , {httpOnly : true})
+            req.session.userId = result._id;
         }
         console.log(result)
         res.json(result)
@@ -51,6 +52,23 @@ router.put('/editprofile', Authorized , async (req,res,next)=>{
 router.get('/logout',(req,res)=>{
     res.clearCookie('token')
     res.json(`logout done successfully`)
+})
+
+//delete DeleteProfile
+router.delete('/deleteprofile', async (req, res) => {
+    try {
+        const userId = req.session.userId
+        if (!userId) {
+            return res.status(401).json({ success: false, message: 'Unauthorized' })
+        }
+
+        const result = await DeleteProfile(userId)
+        console.log(result)
+        res.json(result)
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ success: false, message: err.message })
+    }
 })
 
 module.exports = router
